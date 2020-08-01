@@ -1,0 +1,7 @@
+venv/
+out/
+.DS_store
+# 忽略数据集
+pytorch/
+PytorchDeepLearning/database
+PytorchDeepLearning/dataset
