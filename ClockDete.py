@@ -64,7 +64,6 @@ def dist_2_pts(x1, y1, x2, y2):
 
 def cross_point(th1, r1, th2, r2):
     y1 = ((r2 * np.cos(th1)) - (r1 * np.cos(th2))) / ((np.sin(th2)) * (np.cos(th1)) - (np.sin(th1)) * (np.cos(th2)))
-    x0 = ()
     print("y=", y)
     x1 = (r1 - y * np.sin(th1)) / np.cos(th1)
     x2 = (r2 - y * np.sin(th2)) / np.cos(th2)
@@ -168,36 +167,48 @@ def line_detection(cir, x, y):
 
 
 def scale(cir):
+    """
+    在cir图上根据原区分刻度
+    :param cir:
+    :return: 返回刻度对应的像素值
+    """
     separation = 6.0  # in degrees
     interval = int(360 / separation)
     p1 = np.zeros((interval, 2))  # set empty arrays
     p2 = np.zeros((interval, 2))
     p_text = np.zeros((interval, 2))
+    image = cir.copy()
+
     for i in range(0, interval):
         for j in range(0, 2):
             if j % 2 == 0:
-                p1[i][j] = x + 0.9 * r * np.cos(separation * i * 3.14 / 180)  # point for lines
+                p1[i][j] = x + 0.9 * r * np.sin(separation * i * 3.14 / 180)  # point for lines
             else:
-                p1[i][j] = y + 0.9 * r * np.sin(separation * i * 3.14 / 180)
+                p1[i][j] = y + 0.9 * r * np.cos(separation * i * 3.14 / 180)
     text_offset_x = 10
     text_offset_y = 5
     for i in range(0, interval):
         for j in range(0, 2):
             if j % 2 == 0:
-                p2[i][j] = x + r * np.cos(separation * i * 3.14 / 180)
-                p_text[i][j] = x - text_offset_x + 1.2 * r * np.cos(
-                    (separation) * (i + 9) * 3.14 / 180)  # point for text labels, i+9 rotates the labels by 90 degrees
+                p2[i][j] = x + r * np.sin(separation * i * 3.14 / 180)
+                p_text[i][j] = x - text_offset_x + 1.2 * r * np.sin(
+                    (separation) * (i + 0) * 3.14 / 180)  # point for text labels, i+9 rotates the labels by 90 degrees
             else:
-                p2[i][j] = y + r * np.sin(separation * i * 3.14 / 180)
-                p_text[i][j] = y + text_offset_y + 1.2 * r * np.sin(
-                    (separation) * (i + 9) * 3.14 / 180)  # point for text labels, i+9 rotates the labels by 90 degrees
+                p2[i][j] = y + r * np.cos(separation * i * 3.14 / 180)
+                p_text[i][j] = y + text_offset_y + 1.2 * r * np.cos(
+                    (separation) * (i + 0) * 3.14 / 180)  # point for text labels, i+9 rotates the labels by 90 degrees
     for i in range(0, interval):
-        cv2.line(cir, (int(p1[i][0]), int(p1[i][1])), (int(p2[i][0]), int(p2[i][1])), (0, 255, 0), 2)
-        cv2.putText(cir, '%s' % (int(i * separation)), (int(p_text[i][0]), int(p_text[i][1])), cv2.FONT_HERSHEY_SIMPLEX,
+        cv2.line(image, (int(p1[i][0]), int(p1[i][1])), (int(p2[i][0]), int(p2[i][1])), (0, 255, 0), 2)
+        cv2.putText(image, '%s' % (int(i * separation)), (int(p_text[i][0]), int(p_text[i][1])),
+                    cv2.FONT_HERSHEY_SIMPLEX,
                     0.7, (255, 0, 0), 1, cv2.LINE_AA)
+    save(image, "scale")
+    return p2, image
 
-    save(cir, "scale")
-    pass
+
+def scale_pix(value):
+    x_, y_ = x + r * np.sin(value * 3.14 / 180), y + r * np.cos(value * 3.14 / 180)
+    return x_, y_
 
 
 if __name__ == '__main__':
@@ -222,6 +233,14 @@ if __name__ == '__main__':
 
     cir, x, y, r = circle_detection(binary, nor)
 
-    scale(cir)
+    pixes, scale = scale(cir)
+
+    min = 312
+    max = 46
+    x_min, y_min = scale_pix(min)
+    x_max, y_max = scale(max)
+    cv2.circle(scale, (int(x_min), int(y_min)), 3, (0, 0, 255), 2, cv2.LINE_AA)
+    cv2.circle(scale, (int(x_max), int(y_max)), 3, (0, 0, 255), 2, cv2.LINE_AA)
+    save(scale, "scale-pix")
 
     # line_detection(cir, x, y)
