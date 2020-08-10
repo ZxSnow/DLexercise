@@ -5,17 +5,26 @@ import math
 
 
 class Detection(object):
-    def __init__(self, img, idx='test'):
+    def __init__(self, path):
+        self.meter = None
+        self.img = None
         self.x = 0
         self.y = 0
         self.r = 0
-        self.img = img
-        self.path = 'out'
+        self.path = path
+        self.output = 'out'
         self.min_p = (0, 0)
         self.max_p = (0, 0)
         self.cross_p = (0, 0)
-        self.idx = idx
         # 读取图片
+
+    # 图片剪裁
+    def cut(self):
+        img = cv2.imread(self.path)
+        meter = self.meter
+        cropped = img[meter['y0']:meter['y1'], meter['x0']:meter['x1']]
+        self.img = cropped
+        # self.save(cropped, "cut")
 
     # 图片归一化处理
     def normalized_pic(self):
@@ -24,7 +33,7 @@ class Detection(object):
         return nor
 
     def save(self, img, name):
-        cv2.imwrite(os.path.join(self.path, "%s-%s.jpg" % (name, self.idx)), img)
+        cv2.imwrite(os.path.join(self.output, "%s-%s.jpg" % (name, self.meter['idx'])), img)
 
     # 颜色空间转换：灰度化
     def color_gray(self, img):
@@ -244,8 +253,10 @@ class Detection(object):
         return included_angle
 
     def measure(self):
-        x_min, y_min = self.draw_point(313)
-        x_max, y_max = self.draw_point(47)
+        max_ = self.meter['max_angle']
+        min_ = self.meter['min_angle']
+        x_min, y_min = self.draw_point(int(min_))
+        x_max, y_max = self.draw_point(int(max_))
         self.min_p = (x_min, y_min)
         self.max_p = (x_max, y_max)
 
@@ -266,7 +277,8 @@ class Detection(object):
         du = self.angle(v1, v2)
         print("夹角度数：", du)
         list = {}
-        file = open('conf/mete-%s.txt' % self.idx, 'w')
+        file = open('conf/mete-%s.txt' % self.meter['idx'], 'w')
+        sub = int(self.meter['max_value']) - int(self.meter['min_value'])
         for i in range(int(360 - du) + 1):
             va = 1.6 * i / int(360 - du)
             list[i] = va
@@ -280,7 +292,7 @@ class Detection(object):
         v1 = [self.x, self.y, self.min_p[0], self.min_p[1]]
         v2 = [self.x, self.y, self.cross_p[0], self.cross_p[1]]
         angle = self.angle(v1, v2)
-        f = open('conf/mete-%s.txt' % self.idx, 'r')
+        f = open('conf/mete-%s.txt' % self.meter['idx'], 'r')
         data = f.read()
         data1 = eval(data)
         print("仪表角度：", angle, " 仪表度数：", data1[int(angle + 0.5)])
