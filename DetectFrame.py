@@ -1,17 +1,21 @@
 import cv2
+from conf.MeterConf import Meter5, Meter1
+from detection import Detection
+import time
 
 # 检测识别框架
 
-# todo 1. 图片剪裁
-# 数组存储不同类别仪表对应的裁剪点
+if __name__ == '__main__':
+    # 图片剪裁
+    img = cv2.imread("pic/demo-1.jpg")
+    meter = Meter1
+    cropped = img[meter['y0']:meter['y1'], meter['x0']:meter['x1']]
+    cv2.imwrite("out/test1.jpg", cropped)
 
-img = cv2.imread("/pic/demo-5.jpg")
-# 裁剪坐标为[y0:y1, x0:x1]
-cropped = img[0:128, 0:512]
-
-# todo 2. 指针识别
-# 利用ClockDet中函数抽象出一个指针识别方法
-
-# todo 3. 度数对应
-# 拟定采用不同仪表中指针偏角与度数的对应关系
-# （或利用最大最小值点、圆点，指针识别点来计算偏角信息）
+    # # 1.产生表值对应文件
+    Detection(cropped, "1").scale_write()
+    # # 2.进行读数
+    # t1 = time.time()
+    # Detection(cropped, "5").read_value()
+    # t2 = time.time()
+    # print("速度：", t2 - t1)

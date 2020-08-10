@@ -2,6 +2,7 @@ import os
 
 import cv2
 import numpy as np
+from detection import Detection
 
 path = 'out'
 
@@ -26,7 +27,7 @@ def threshold(gray):
 
 
 def filters(bin):
-    median = cv2.medianBlur(binary, 1)
+    median = cv2.medianBlur(bin, 1)
     save(median, "median")
     # 高斯滤波
     gaussian = cv2.GaussianBlur(median, (3, 3), 0)
@@ -232,6 +233,7 @@ if __name__ == '__main__':
     # save(edges, "edges")
 
     cir, x, y, r = circle_detection(binary, nor)
+    print("检测圆相关信息", x, y, r)
 
     pixes, scale = scale(cir)
 
