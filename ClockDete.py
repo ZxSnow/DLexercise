@@ -238,9 +238,9 @@ if __name__ == '__main__':
     min = 312
     max = 46
     x_min, y_min = scale_pix(min)
-    x_max, y_max = scale(max)
+    x_max, y_max = scale_pix(max)
     cv2.circle(scale, (int(x_min), int(y_min)), 3, (0, 0, 255), 2, cv2.LINE_AA)
     cv2.circle(scale, (int(x_max), int(y_max)), 3, (0, 0, 255), 2, cv2.LINE_AA)
     save(scale, "scale-pix")
 
-    # line_detection(cir, x, y)
+    line_detection(cir, x, y)
