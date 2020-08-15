@@ -1,3 +1,6 @@
+"""
+    keras教程：手写数字识别（李宏毅视频）
+"""
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Convolution2D
 from keras.datasets import mnist
