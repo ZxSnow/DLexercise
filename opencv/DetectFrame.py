@@ -1,7 +1,7 @@
-import cv2
-from conf.MeterConf import Meter5, Meter1
-from detection import Detection
 import time
+
+from conf.MeterConf import Meter5
+from opencv.detection import Detection
 
 # 检测识别框架
 
@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # cv2.imwrite("out/test1.jpg", cropped)
 
     # # 1.产生表值对应文件
-    read = Detection(path='pic/demo-5.jpg')
+    read = Detection(path='../pic/demo-5.jpg')
     read.meter = Meter5
     read.cut()
     # read.scale_write()

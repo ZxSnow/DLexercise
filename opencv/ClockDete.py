@@ -2,9 +2,8 @@ import os
 
 import cv2
 import numpy as np
-from detection import Detection
 
-path = 'out'
+path = '../out'
 
 
 def save(img, name):

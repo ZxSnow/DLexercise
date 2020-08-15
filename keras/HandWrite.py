@@ -5,7 +5,7 @@ from keras.utils import np_utils
 import numpy as np
 
 # 数据集
-f = np.load('file/mnist.npz')
+f = np.load('../file/mnist.npz')
 (X_train, y_train) = f['x_train'], f['y_train']
 (X_test, y_test) = f['x_test'], f['y_test']
 # (X_train, y_train), (X_test, y_test) = mnist.load_data()
