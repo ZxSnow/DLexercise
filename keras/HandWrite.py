@@ -7,6 +7,15 @@ from keras.datasets import mnist
 from keras.utils import np_utils
 import numpy as np
 
+# 为GPU分配内存，因为独显直接使用时会申请全部内存，win下出现异常
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+config = tf.ConfigProto()
+config.gpu_options.allocator_type = 'BFC' #A "Best-fit with coalescing" algorithm, simplified from a version of dlmalloc.
+config.gpu_options.per_process_gpu_memory_fraction = 0.5
+config.gpu_options.allow_growth = True
+set_session(tf.Session(config=config))
+
 # 数据集
 f = np.load('../file/mnist.npz')
 (X_train, y_train) = f['x_train'], f['y_train']
@@ -22,7 +31,7 @@ y_train = np_utils.to_categorical(y_train, num_classes=10)
 y_test = np_utils.to_categorical(y_test, num_classes=10)
 
 # 为测试集添加噪声，用以演示dropout
-X_test = np.random.normal(X_test)
+# X_test = np.random.normal(X_test)
 
 # 1. 构建模型
 model = Sequential()
@@ -32,13 +41,13 @@ model = Sequential()
 # model.add(Dense(input_dim=28 * 28, output_dim=500))
 # model.add(Activation('sigmoid'))
 model.add(Dense(input_dim=28 * 28, units=500, activation='relu'))
-model.add(Dropout(0.7))
+# model.add(Dropout(0.7))
 
 # 第二层
 # model.add(Dense(output_dim=500))
 # model.add(Activation('sigmoid'))
 model.add(Dense(units=500, activation='relu'))
-model.add(Dropout(0.7))
+# model.add(Dropout(0.7))
 
 # 第三层
 # model.add(Dense(units=500, activation='relu'))
