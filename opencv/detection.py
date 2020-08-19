@@ -277,7 +277,7 @@ class Detection(object):
         du = self.angle(v1, v2)
         print("夹角度数：", du)
         list = {}
-        file = open('conf/mete-%s.txt' % self.meter['idx'], 'w')
+        file = open('../conf/mete-%s.txt' % self.meter['idx'], 'w')
         sub = int(self.meter['max_value']) - int(self.meter['min_value'])
         for i in range(int(360 - du) + 1):
             va = 1.6 * i / int(360 - du)
@@ -292,7 +292,7 @@ class Detection(object):
         v1 = [self.x, self.y, self.min_p[0], self.min_p[1]]
         v2 = [self.x, self.y, self.cross_p[0], self.cross_p[1]]
         angle = self.angle(v1, v2)
-        f = open('conf/mete-%s.txt' % self.meter['idx'], 'r')
+        f = open('../conf/mete-%s.txt' % self.meter['idx'], 'r')
         data = f.read()
         data1 = eval(data)
         print("仪表角度：", angle, " 仪表度数：", data1[int(angle + 0.5)])
