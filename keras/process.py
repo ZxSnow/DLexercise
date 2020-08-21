@@ -31,7 +31,7 @@ data/
             ...
 '''
 
-data_folder = 'file/17flowers/'  # 原始图像目录
+data_folder = '../file/17flowers/jpg/'  # 原始图像目录
 new_data_folder = './flowers17/'  # 新的文件夹
 
 # add label first
